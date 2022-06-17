@@ -17,7 +17,10 @@ if (config.mock) {
   mockXHR()
 }
 
-const app = createApp(App)
+const app = createApp(App, {})
+
+// 通过这种方法可以定义全局的变量 取代Vue.protoType.xx
+app.provide('globalVariable', 'i am globalVariable')
 
 app.use(vantPlugins)
 app.use(store)

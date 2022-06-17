@@ -1,38 +1,39 @@
-<!-- about -->
 <template>
   <div class="form-input">
-    <van-field
+    <!-- <van-field
       :value="value"
       :placeholder="placeholderComp"
       :disabled="isDisabled(item)"
       v-bind="$attrs"
       @update:model-value="onInput"
-    />
+    /> -->
+    <van-config-provider :theme-vars="item?.configProvider">
+      <van-field
+        style="background: none;"
+        :placeholder="placeholderComp"
+        :disabled="isDisabled(item)"
+        v-bind="$attrs"
+      >
+      </van-field>
+    </van-config-provider>
   </div>
 </template>
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
 
-// 公共组件
-interface IFormItem {
-  type: string
-  label: string
-  props: any
-  key: string
-  disabled?: any
-  display?: any
-}
+import { IFormItem } from '../types'
+
 export default defineComponent({
   name: 'Mine',
   props: {
     item: {
       type: Object as PropType<IFormItem | undefined>,
       require: true
-    },
-    value: {
-      type: String || Number,
-      require: true
     }
+    // value: {
+    //   type: String || Number,
+    //   require: true
+    // }
   },
   emits: ['input'],
   components: {},
@@ -55,14 +56,15 @@ export default defineComponent({
         : `请输入${props.item?.label}`
     })
 
-    const onInput = (e: any) => {
-      context.emit('input', e)
-    }
+    // const onInput = (e: any) => {
+
+    //   context.emit('input', e)
+    // }
 
     return {
       placeholderComp,
-      isDisabled,
-      onInput
+      isDisabled
+      // onInput
     }
   }
 })

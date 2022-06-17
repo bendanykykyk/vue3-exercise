@@ -1,7 +1,13 @@
 <template>
   <van-form ref="form" input-align="left" label-width="80px">
     <div v-for="(item, index) in fieldList" :key="index" label-align="right" class="form-item">
-      <van-field v-if="isShow(item)" :prop="item.key" :rules="item.rules" :label="item.label + ':'">
+      <van-field
+        v-if="isShow(item)"
+        :prop="item.key"
+        :rules="item.rules"
+        :label="item.label"
+        :style="item.style"
+      >
         <!-- 自定义label  -->
         <!-- <template #label>
             <span>
@@ -19,14 +25,11 @@
             style="display: flex; align-items: center"
             :is="compChildName(item)"
             :item="item"
-            :value="formData[item.key]"
+            v-model="formData[item.key]"
             v-bind="{ ...item.props }"
             v-on="{ ...item.events }"
-            @input="(value) => onInput(item.key, value)"
-          />
-          <!-- 
-            
-            @change="(value) => onChange(item.key, value)" -->
+          >
+          </component>
         </template>
       </van-field>
     </div>
@@ -53,24 +56,20 @@
 </template>
 <script lang="ts">
 import FormInput from '@/components/Common/TSimpleForm/FormInput/index.vue'
-import { PropType, defineComponent, onMounted, ref, reactive, toRef, getCurrentInstance } from 'vue'
-interface IFormItem {
-  type: string
-  label: string
-  props: any
-  key: string
-  disabled?: any
-  display?: any
-  events?: any
-  rules?: any
-}
+import FormInputWithAuthCode from '@/components/Common/TSimpleForm/FormInputWithAuthCode/index.vue'
+import FormCheckBox from '@/components/Common/TSimpleForm/FormCheckBox/index.vue'
+import { PropType, defineComponent, ref, watch, onMounted } from 'vue'
+import { IFormItem } from './types'
+import { useVModelFormData } from './hook/useVModelFormData'
 export default defineComponent({
   name: 'TSimpleForm',
   components: {
-    FormInput
+    FormInput,
+    FormInputWithAuthCode,
+    FormCheckBox
   },
   props: {
-    formData: {
+    modelValue: {
       type: Object,
       default: () => {}
     },
@@ -87,12 +86,14 @@ export default defineComponent({
       default: () => {}
     }
   },
-  emits: ['update:formData'],
+  emits: ['update:modelValue'],
   setup(props, context) {
     const compChildName = (item: IFormItem) => {
       const name = {
         // 后续增加
-        input: 'FormInput'
+        input: 'FormInput',
+        inputWithAuthCode: 'FormInputWithAuthCode',
+        checkBox: 'FormCheckBox'
       }[item.type]
       return name
     }
@@ -107,27 +108,11 @@ export default defineComponent({
       }
     }
 
-    // const onChange = (key: string, value: any) => {
-    //   context.emit('update:formData')
-    //   // this.$set(this.formData, key, value)
-    //   // this.$forceUpdate()
-    // }
-
-    const onInput = (key: string, value: any) => {
-      // console.log(key, value)
-
-      // const formData = props.formData
-      // console.log(formData)
-      // formData[key] = value
-      context.emit('update:formData', { ...props.formData, [key]: value })
-      debugger
-      // context.emit('update:formData', formData)
-    }
+    const { formData } = useVModelFormData(props, context)
     return {
       compChildName,
       isShow,
-      // onChange,
-      onInput
+      formData
     }
   }
 
@@ -167,9 +152,9 @@ export default defineComponent({
   padding: 0;
 }
 .form-item {
-  border-bottom: 1px solid rgba(200, 182, 159, 0.1);
+  // border-bottom: 1px solid rgba(200, 182, 159, 0.1);
   min-height: 40px;
-  background: #fff;
+  // background: #fff;
   display: flex;
   align-items: center;
 }

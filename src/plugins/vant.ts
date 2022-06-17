@@ -16,7 +16,9 @@ import {
   Col,
   Row,
   Field,
-  Form
+  Form,
+  Checkbox,
+  CheckboxGroup
 } from 'vant'
 
 const plugins = [
@@ -36,7 +38,9 @@ const plugins = [
   Col,
   Row,
   Field,
-  Form
+  Form,
+  Checkbox,
+  CheckboxGroup
 ]
 
 export const vantPlugins = {

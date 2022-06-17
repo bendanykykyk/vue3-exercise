@@ -1,5 +1,5 @@
 // 暂时废弃
-export const vCssVarToCamel = (name: string) => {
+const vCssVarToCamel = (name: string) => {
   // --van-cell-active-color   =>  cellActiveColor
   const fragmentName = name.slice(6).split('-')
   const [firstWord, ...restWords] = fragmentName
@@ -8,3 +8,5 @@ export const vCssVarToCamel = (name: string) => {
   })
   return [firstWord, ...upperFirstLetterRestWords].join('')
 }
+
+console.log(vCssVarToCamel('--van-field-placeholder-text-color'))
